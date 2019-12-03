@@ -4,12 +4,26 @@ let data = fs.readFileSync("./data.txt").toString().split('\n');
 let wireOne = data[9].split(',');
 let wireTwo = data[10].split(',');
 
+class Point{
+
+    constructor(x, y, distance) {
+        this.x = x;
+        this.y = y;
+        this.distance = distance;
+    }
+
+    equals(p) {
+        return this.x === p.x && this.y === p.y;
+    }
+
+}
+
 
 function getWirePoints(wireMovements) {
-    let wirePoints = {};
+    let wirePoints = [];
     let x = 0,
         y = 0,
-        steps = 0;
+        distance = 0;
     wireMovements.forEach(movement => {
         let direction = movement.substring(0,1);
         let spaces = parseInt(movement.substring(1, movement.length));
@@ -21,13 +35,7 @@ function getWirePoints(wireMovements) {
                 case 'L': x--; break;
                 case 'R': x++; break;
             }
-            steps++;
-            // Due to how objects work in JS, objects in sets are compared based off their pointers, not
-            // the values they contain. In this case you would not be able to store an object {x,y}
-            // in the set due to this reason. Storing strings does work though and can be parsed after
-            if ( wirePoints[`${x},${y}`] === undefined ) {
-                wirePoints[`${x},${y}`] = steps;
-            }
+            wirePoints.push(new Point(x, y, ++distance));
         }
     });
     
@@ -35,22 +43,22 @@ function getWirePoints(wireMovements) {
 }
 
 function getCrossOverPoints(wireAPoints, wireBPoints) {
-    let crossOverLocations = [];
 
-    console.log("asdf")
-
-    Object.keys(wireAPoints).forEach( key => {
-        if ( Object.keys(wireBPoints).indexOf(key) !== -1 ) { crossOverLocations.push(key) }
+    list1.filter(
+        (set => a => isUnion === set.has(a.userId)) (new Set(list2.map(b => b.userId)))
+    );
+    wireAPoints.filter( pointA => {
+        wireBPoints.some( pointB => pointA.equals(pointB) );
     })
-    console.log("fsda")
     
-    return crossOverLocations;
+    return wireAPoints;
+
 }
 
 function findMinimumDistance( crossOverLocations ) {
-    let minimumDistance = findManhattanDistanceToStart(crossOverLocations.keys[0]);
+    let minimumDistance = findManhattanDistanceToStart(crossOverLocations[0]);
 
-    Object.keys(crossOverLocations).forEach( location => {
+    crossOverLocations.forEach( location => {
         let curDistance = findManhattanDistanceToStart(location);
         if ( curDistance < minimumDistance ) {
             minimumDistance = curDistance;
