@@ -18,21 +18,34 @@ function findValidPasswordsInRange( low, high ) {
 // Cannot contain any decreases in digits
 // Is within the limit specified
 function isValidPassword(password){
-
     password = password.toString();
 
     return password.length === passwordLength && hasDouble(password) && 
            noDecrease(password) && withinLimit(password, lowerLimit, upperLimit);
 }
 
+
+// The change in part 2 is that the string can only contain a max of 2 consecutive numbers 
+// but also must contain at least one pair of numbers
 function hasDouble(password) {
+
     let prevChar = password[0];
+    let consecutiveCharacterArray = [];
+    let consecutiveCharacterCount = 1;
 
     for ( let i = 1; i < password.length; i++ ) {
-        if ( password[i] === prevChar ) { return true; }
+        if ( password[i] === prevChar ) { 
+            consecutiveCharacterCount++;
+        } else {
+            consecutiveCharacterArray.push(consecutiveCharacterCount);
+            consecutiveCharacterCount = 1;
+        }
         prevChar = password[i];
     }
-    return false;
+
+    consecutiveCharacterArray.push(consecutiveCharacterCount);
+    return consecutiveCharacterArray.includes(2);
+
 }
 
 function noDecrease(password) {
