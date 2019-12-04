@@ -1,15 +1,15 @@
 let fs = require('fs');
 let data = fs.readFileSync("./data.txt").toString().split('\n');
 
-let wireOne = data[6].split(',');
-let wireTwo = data[7].split(',');
+let wireOne = data[9].split(',');
+let wireTwo = data[10].split(',');
 
 
 function getWirePoints(wireMovements) {
     let wirePoints = new Map();
     let x = 0,
         y = 0,
-        distance = 0;
+        distance = 1;
 
     wireMovements.forEach(movement => {
         let direction = movement.substring(0,1);
@@ -23,9 +23,11 @@ function getWirePoints(wireMovements) {
                 case 'R': x++; break;
             }
             if ( !wirePoints.has(`${x},${y}`) ) {
-                wirePoints.set(`${x},${y}`, ++distance);
+                wirePoints.set(`${x},${y}`, distance);
             }
+            distance++;
         }
+
     });
     
     return wirePoints;
@@ -49,9 +51,11 @@ function findMinimumTotalDistanceTravelled( crossOverLocations, wireOne, wireTwo
     let minimumTravelDistance = wireOne.get(minKey) + wireTwo.get(minKey);
 
     crossOverLocations.forEach( key => {
-        console.log(key, wireOne.get(key), wireTwo.get(key))
         let totalDistance = wireOne.get(key) + wireTwo.get(key);
-
+        // if ( totalDistance < 50000) {
+        //     console.log(`${key}: ${wireOne.get(key)} ${wireTwo.get(key)} -  ${totalDistance}`)
+        // }
+        
         if ( totalDistance < minimumTravelDistance ) {
             minimumTravelDistance = totalDistance;
             minKey = key;
@@ -60,13 +64,6 @@ function findMinimumTotalDistanceTravelled( crossOverLocations, wireOne, wireTwo
     });
 
     return {minimumTravelDistance, minKey};
-}
-
-function findManhattanDistanceToStart(location) {
-    // parse the location string to numbers
-    let x = parseInt(location.split(',')[0])
-    let y = parseInt(location.split(',')[1])
-    return Math.abs(x) + Math.abs(y);
 }
 
 let w1 = getWirePoints(wireOne);
